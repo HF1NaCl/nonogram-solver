@@ -10,8 +10,8 @@ import LanguageComboBox from './shared/LanguageComboBox.vue'
       <AppLogo />
     </div>
     <div class="flex items-center gap-2">
-      <span class="header-button">Resolución</span>
-      <span class="header-button">Acerca De</span>
+      <a href="#resolution" class="header-button">Resolución</a>
+      <a href="#about" class="header-button">Acerca De</a>
       <LanguageComboBox class="ml-2" />
     </div>
   </header>

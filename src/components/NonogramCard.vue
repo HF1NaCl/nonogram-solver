@@ -1,51 +1,45 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
+import { useClueNavigation } from '@/composables/useClueNavigation'
+import { useNonogramClues } from '@/composables/useNonogramClues'
+import { useClueValidation } from '@/composables/useClueValidation'
+import { useNonogramSolver } from '@/composables/useNonogramSolver'
+import ClearButton from './shared/ClearButton.vue'
 
 const width = ref(10)
 const height = ref(10)
 const group = ref(5)
 
-const maxRowClues = computed(() => Math.ceil(width.value / 2))
-const maxColumnClues = computed(() => Math.ceil(height.value / 2))
+const { rowClues, columnClues, rowClueWidth, clearClues } = useNonogramClues(width, height)
+const { moveClueFocus } = useClueNavigation()
 
-const cells = computed(() => {
-  const w = width.value
-  const h = height.value
-  const arr = []
-  for (let r = 0; r < h; r++) {
-    for (let c = 0; c < w; c++) {
-      arr.push({ r, c })
-    }
-  }
-  return arr
-})
+const hasErrors = computed(() => Boolean(validationMessage.value))
 
-const createClues = (lineCount: number, maxClues: number) =>
-  Array.from({ length: lineCount }, () => Array.from({ length: maxClues }, () => ''))
+const { grid, status, canSolve, startSolving, applySolution, setStatus, resetGrid } =
+  useNonogramSolver(width, height, rowClues, columnClues, hasErrors)
 
-const rowClues = ref(createClues(height.value, maxRowClues.value))
-const columnClues = ref(createClues(width.value, maxColumnClues.value))
+const cells = computed(() =>
+  Array.from({ length: width.value * height.value }, (_, index) => ({
+    r: Math.floor(index / width.value),
+    c: index % width.value,
+  })),
+)
 
-const rowClueWidth = computed(() => {
-  const inputWidth = 1.5
-  const gap = 0.125
-  const padding = 0.5
-  const clues = maxRowClues.value
+const { rowErrors, columnErrors, validationMessage } = useClueValidation(
+  rowClues,
+  columnClues,
+  width,
+  height,
+)
 
-  return `${clues * inputWidth + (clues - 1) * gap + padding}rem`
-})
+const solve = () => {
+  const puzzle = startSolving()
 
-const resizeClues = (currentClues: string[][], lineCount: number, maxClues: number) =>
-  Array.from({ length: lineCount }, (_, lineIndex) =>
-    Array.from({ length: maxClues }, (_, clueIndex) => currentClues[lineIndex]?.[clueIndex] ?? ''),
-  )
+  if (!puzzle) return
 
-watch([width, height], () => {
-  rowClues.value = resizeClues(rowClues.value, height.value, maxRowClues.value)
-
-  columnClues.value = resizeClues(columnClues.value, width.value, maxColumnClues.value)
-})
+  console.log(puzzle)
+}
 </script>
 
 <template>
@@ -69,14 +63,15 @@ watch([width, height], () => {
       </div>
 
       <div class="flex items-center gap-2">
-        <button class="solve-button inline-flex items-center justify-center gap-2">
+        <button
+          class="solve-button inline-flex items-center justify-center gap-2"
+          :disabled="!canSolve"
+          @click="solve"
+        >
           <Icon icon="mdi:wand" class="icon" />
-          <span>Resolver!</span>
+          <span>{{ status === 'solving' ? 'Resolviendo...' : 'Resolver!' }}</span>
         </button>
-        <button class="clear-button inline-flex items-center justify-center gap-2">
-          <Icon icon="mdi:reload" class="icon" />
-          <span>Limpiar</span>
-        </button>
+        <ClearButton @clear="clearClues" />
       </div>
     </div>
 
@@ -102,10 +97,14 @@ watch([width, height], () => {
               v-for="(_, clueIndex) in clues"
               :key="`column-${columnIndex}-${clueIndex}`"
               v-model="clues[clueIndex]"
-              class="clue-input"
+              :class="['clue-input', { 'clue-input-error': columnErrors[columnIndex] }]"
               type="text"
               inputmode="numeric"
               maxlength="2"
+              data-clue-area="column"
+              :data-line="columnIndex"
+              :data-index="clueIndex"
+              @keydown="moveClueFocus($event, 'column', columnIndex, clueIndex)"
             />
           </div>
         </div>
@@ -121,10 +120,14 @@ watch([width, height], () => {
               v-for="(_, clueIndex) in clues"
               :key="`row-${rowIndex}-${clueIndex}`"
               v-model="clues[clueIndex]"
-              class="clue-input"
+              :class="['clue-input', { 'clue-input-error': rowErrors[rowIndex] }]"
               type="text"
               inputmode="numeric"
               maxlength="2"
+              data-clue-area="row"
+              :data-line="rowIndex"
+              :data-index="clueIndex"
+              @keydown="moveClueFocus($event, 'row', rowIndex, clueIndex)"
             />
           </div>
         </div>
@@ -137,20 +140,32 @@ watch([width, height], () => {
             gridTemplateRows: `repeat(${height}, 1.5rem)`,
           }"
         >
-          <div
-            v-for="cell in cells"
-            :key="`${cell.r}-${cell.c}`"
-            :class="[
-              'flex items-center justify-center select-none bg-white dark:bg-gray-800',
-              'border border-gray-300 dark:border-gray-700',
-              (cell.c + 1) % group === 0 ? 'group-border-right' : '',
-              (cell.r + 1) % group === 0 ? 'group-border-bottom' : '',
-            ]"
-            style="width: 1.5rem; height: 1.5rem"
-          ></div>
+          <div v-for="(row, rowIndex) in grid" :key="rowIndex" class="contents">
+            <div
+              v-for="(cellState, columnIndex) in row"
+              :key="`${rowIndex}-${columnIndex}`"
+              :class="[
+                'border border-gray-300 dark:border-gray-700',
+                cellState === 'unknown' ? 'bg-white dark:bg-gray-800' : '',
+                cellState === 'filled' ? 'bg-gray-950 dark:bg-white' : '',
+                cellState === 'empty' ? 'bg-gray-100 dark:bg-gray-700' : '',
+                (columnIndex + 1) % group === 0 ? 'group-border-right' : '',
+                (rowIndex + 1) % group === 0 ? 'group-border-bottom' : '',
+              ]"
+              style="width: 1.5rem; height: 1.5rem"
+            ></div>
+          </div>
         </div>
       </div>
     </div>
+
+    <p
+      v-if="validationMessage"
+      class="text-center text-sm text-red-600 dark:text-red-400"
+      role="alert"
+    >
+      {{ validationMessage }}
+    </p>
   </div>
 </template>
 
@@ -158,6 +173,14 @@ watch([width, height], () => {
 @reference "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+.clue-input-error {
+  border-color: #dc2626 !important;
+  background: #fef2f2;
+}
+.dark .clue-input-error {
+  border-color: #f87171 !important;
+  background: #450a0a;
+}
 .icon {
   @apply w-6 h-6;
 }
@@ -172,9 +195,6 @@ watch([width, height], () => {
 }
 .solve-button {
   @apply bg-gray-950 hover:bg-gray-700 text-white font-bold rounded-lg cursor-pointer size-14 w-36;
-}
-.clear-button {
-  @apply text-sm bg-gray-200 hover:bg-gray-300 text-black font-bold rounded-lg cursor-pointer size-10 w-28 border-2;
 }
 .nonogram-wrapper {
   width: 100%;

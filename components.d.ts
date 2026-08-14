@@ -15,9 +15,11 @@ declare module 'vue' {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     AppLogo: typeof import('./src/components/shared/AppLogo.vue')['default']
+    ClearButton: typeof import('./src/components/shared/ClearButton.vue')['default']
     LanguageComboBox: typeof import('./src/components/shared/LanguageComboBox.vue')['default']
     NonogramCard: typeof import('./src/components/NonogramCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    TooltipTheme: typeof import('./src/components/shared/TooltipTheme.vue')['default']
   }
 }
