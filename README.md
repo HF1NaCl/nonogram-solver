@@ -1,48 +1,104 @@
-# nonogram-solver
+# Nonogram Solver
 
-This template should help get you started developing with Vue 3 in Vite.
+Un resolvedor de nonogramas simple y fácil de usar. Ingresa los números de las pistas y resuelve el puzzle de forma rápida. Altamente basado en nonogramsolver.com como un ejercicio de cómo hacer un Solver.
 
-## Recommended IDE Setup
+## ¿Qué es un nonograma?
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+Un nonograma es un puzzle lógico donde debes llenar una cuadrícula de celdas basándote en números que indican cuántas celdas consecutivas deben estar rellenas en cada fila y columna.
 
-## Recommended Browser Setup
+## Características del proyecto
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+- Interfaz minimalista y fácil de usar
+- Solver rápido usando WebWorker
+- Validación automática de pistas
+- Diseño responsive con TailwindCSS
+- Código limpio y bien documentado
 
-## Type Support for `.vue` Imports in TS
+## Estructura del Proyecto
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+```
+nonogram-solver/
+├── src/
+│   ├── components/           # Componentes Vue reutilizables
+│   │   ├── AboutCard.vue
+│   │   ├── AppFooter.vue
+│   │   ├── AppHeader.vue
+│   │   ├── NonogramCard.vue
+│   │   └── shared/           # Componentes compartidos
+│   │       ├── AppLogo.vue
+│   │       ├── ClearButton.vue
+│   │       ├── LanguageComboBox.vue
+│   │       └── TooltipTheme.vue
+│   ├── composables/          # Lógica reutilizable (Vue Composition API)
+│   │   ├── useClueNavigation.ts
+│   │   ├── useClueValidation.ts
+│   │   ├── useNonogramClues.ts
+│   │   └── useNonogramSolver.ts
+│   ├── interfaces/           # Tipos TypeScript
+│   │   ├── CellState.type.ts
+│   │   ├── NonogramPuzzle.type.ts
+│   │   └── SolverStatus.type.ts
+│   ├── views/                # Vistas principales
+│   │   └── HomeView.vue
+│   ├── layouts/              # Layouts
+│   │   └── MainLayout.vue
+│   ├── router/               # Configuración de rutas
+│   │   └── index.ts
+│   ├── stores/               # Estado (Pinia)
+│   ├── assets/               # Recursos estáticos
+│   │   └── main.css
+│   ├── App.vue               # Componente raíz
+│   └── main.ts               # Punto de entrada
+├── public/                   # Archivos públicos estáticos
+├── package.json
+├── vite.config.ts            # Configuración de Vite
+├── vitest.config.ts          # Configuración de Vitest
+├── tsconfig.json             # Configuración de TypeScript
+└── PROJECT_CONTEXT.md        # Especificaciones del proyecto
+```
 
-## Customize configuration
+### Requisitos
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+- Node.js (v18 o superior)
+- pnpm
 
-## Project Setup
+### Instalación
 
 ```sh
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+### Desarrollo
 
 ```sh
 pnpm dev
 ```
 
-### Type-Check, Compile and Minify for Production
+La aplicación estará disponible en `http://localhost:5173`
+
+### Construcción para Producción
 
 ```sh
 pnpm build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+### Pruebas Unitarias
 
 ```sh
 pnpm test:unit
 ```
+
+## Tecnologías Utilizadas
+
+- Lenguaje: Vue y TS, con TailwindCSS
+- Build Tool: Vite
+- Entorno: Visual Studio Code
+- Pruebas: Vitest
+
+## Estado del Proyecto
+
+Todavía está en desarrollo, por lo que si quieres usar algún Nonogram Solver estable, usa el mencionado en los créditos.
+
+## Créditos
+
+- Proyecto original y base: nonogramsolver.com por Puzzle Rocket
