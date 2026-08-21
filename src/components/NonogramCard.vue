@@ -11,7 +11,7 @@ const width = ref(10)
 const height = ref(10)
 const group = ref(5)
 
-const { rowClues, columnClues, rowClueWidth, clearClues } = useNonogramClues(width, height)
+const { rowClues, columnClues, clearClues } = useNonogramClues(width, height)
 const { moveClueFocus } = useClueNavigation()
 
 const hasErrors = computed(() => Boolean(validationMessage.value))
@@ -25,6 +25,22 @@ const cells = computed(() =>
     c: index % width.value,
   })),
 )
+
+const cellSize = computed(() => {
+  if (typeof window === 'undefined') {
+    return '24px'
+  }
+
+  const availableWidth = Math.max(220, window.innerWidth - 120)
+  const maxCell = Math.max(18, Math.min(28, Math.floor(availableWidth / Math.max(width.value, 10))))
+
+  return `${maxCell}px`
+})
+
+const rowClueWidth = computed(() => {
+  const clueSize = Number.parseFloat(cellSize.value)
+  return `${Math.max(40, Math.ceil(width.value / 2) * clueSize + 8)}px`
+})
 
 const { rowErrors, columnErrors, validationMessage } = useClueValidation(
   rowClues,
@@ -79,6 +95,7 @@ const solve = () => {
       <div
         class="nonogram-layout"
         :style="{
+          '--cell-size': cellSize,
           gridTemplateColumns: `${rowClueWidth} auto`,
           gridTemplateRows: `auto auto`,
         }"
@@ -87,7 +104,7 @@ const solve = () => {
         <div class="nonogram-corner"></div>
 
         <!-- Pistas superiores -->
-        <div class="column-clues" :style="{ gridTemplateColumns: `repeat(${width}, 1.5rem)` }">
+        <div class="column-clues" :style="{ gridTemplateColumns: `repeat(${width}, ${cellSize})` }">
           <div
             v-for="(clues, columnIndex) in columnClues.slice(0, width)"
             :key="`column-${columnIndex}`"
@@ -110,7 +127,7 @@ const solve = () => {
         </div>
 
         <!-- Pistas izquierdas -->
-        <div class="row-clues" :style="{ gridTemplateRows: `repeat(${height}, 1.5rem)` }">
+        <div class="row-clues" :style="{ gridTemplateRows: `repeat(${height}, ${cellSize})` }">
           <div
             v-for="(clues, rowIndex) in rowClues.slice(0, height)"
             :key="`row-${rowIndex}`"
@@ -136,8 +153,8 @@ const solve = () => {
         <div
           class="grid gap-0"
           :style="{
-            gridTemplateColumns: `repeat(${width}, 1.5rem)`,
-            gridTemplateRows: `repeat(${height}, 1.5rem)`,
+            gridTemplateColumns: `repeat(${width}, ${cellSize})`,
+            gridTemplateRows: `repeat(${height}, ${cellSize})`,
           }"
         >
           <div v-for="(row, rowIndex) in grid" :key="rowIndex" class="contents">
@@ -152,7 +169,7 @@ const solve = () => {
                 (columnIndex + 1) % group === 0 ? 'group-border-right' : '',
                 (rowIndex + 1) % group === 0 ? 'group-border-bottom' : '',
               ]"
-              style="width: 1.5rem; height: 1.5rem"
+              :style="{ width: cellSize, height: cellSize }"
             ></div>
           </div>
         </div>
@@ -198,7 +215,9 @@ const solve = () => {
 }
 .nonogram-wrapper {
   width: 100%;
-  overflow: auto;
+  overflow-x: auto;
+  overflow-y: visible;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   justify-content: center;
 }
@@ -206,6 +225,7 @@ const solve = () => {
 .nonogram-layout {
   display: grid;
   width: max-content;
+  min-width: 0;
   margin: 0 auto;
 }
 
@@ -229,6 +249,7 @@ const solve = () => {
   width: 100%;
   min-width: 0;
   background: #f3f4f6;
+  overflow: visible;
 }
 
 .row-clue {
@@ -236,16 +257,31 @@ const solve = () => {
   justify-content: flex-end;
   align-items: center;
   gap: 0;
-  padding-right: 0.375rem;
+  padding-right: 0.25rem;
   width: 100%;
   box-sizing: border-box;
   flex-wrap: nowrap;
 }
 
 .clue-input {
-  @apply w-6 h-6 box-border p-0 rounded-none border border-gray-300 bg-gray-50 text-gray-900 text-center text-xs font-semibold;
-  @apply dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100;
+  width: var(--cell-size, 1.5rem);
+  height: var(--cell-size, 1.5rem);
+  box-sizing: border-box;
+  padding: 0;
+  border-radius: 0;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #111827;
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
   outline: none;
+}
+
+.dark .clue-input {
+  border-color: #475569;
+  background: #374151;
+  color: #f8fafc;
 }
 
 .clue-input:hover {

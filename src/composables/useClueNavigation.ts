@@ -7,6 +7,14 @@ export const useClueNavigation = () => {
     lineIndex: number,
     clueIndex: number,
   ) => {
+    // Si no es una tecla de navegación (Arrow o Space), dejar que se escriba normalmente
+    if (!event.key.startsWith('Arrow') && event.code !== 'Space') {
+      return
+    }
+
+    // Prevenir solo las teclas de navegación
+    event.preventDefault()
+
     let nextLine = lineIndex
     let nextClue = clueIndex
 
@@ -26,7 +34,10 @@ export const useClueNavigation = () => {
       area === 'row' ? nextLine++ : nextClue++
     }
 
-    if (!event.key.startsWith('Arrow')) return
+    // Space: navega según el área
+    if (event.code === 'Space') {
+      nextClue++ // Siempre va al siguiente número en la secuencia
+    }
 
     const nextInput = document.querySelector<HTMLInputElement>(
       `[data-clue-area="${area}"][data-line="${nextLine}"][data-index="${nextClue}"]`,
@@ -34,7 +45,6 @@ export const useClueNavigation = () => {
 
     if (!nextInput) return
 
-    event.preventDefault()
     nextInput.focus()
     nextInput.select()
   }

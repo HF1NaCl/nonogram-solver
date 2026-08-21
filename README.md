@@ -2,10 +2,6 @@
 
 Un resolvedor de nonogramas simple y fácil de usar. Ingresa los números de las pistas y resuelve el puzzle de forma rápida. Altamente basado en nonogramsolver.com como un ejercicio de cómo hacer un Solver.
 
-## ¿Qué es un nonograma?
-
-Un nonograma es un puzzle lógico donde debes llenar una cuadrícula de celdas basándote en números que indican cuántas celdas consecutivas deben estar rellenas en cada fila y columna.
-
 ## Características del proyecto
 
 - Interfaz minimalista y fácil de usar
@@ -59,7 +55,7 @@ nonogram-solver/
 
 ### Requisitos
 
-- Node.js (v18 o superior)
+- Node.js (v20 o superior)
 - pnpm
 
 ### Instalación
@@ -102,3 +98,5 @@ Todavía está en desarrollo, por lo que si quieres usar algún Nonogram Solver 
 ## Créditos
 
 - Proyecto original y base: nonogramsolver.com por Puzzle Rocket
+- Lógica de resolución visual: https://lihautan.com/nonogram/ por Tan Li Hau
+- Lógica de Resolución clásica: https://fedimser.github.io/nonogram.html por Dima Fedoriaka

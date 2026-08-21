@@ -1,5 +1,13 @@
 <script setup lang="ts">
 import LanguageComboBox from './shared/LanguageComboBox.vue'
+
+const scrollToSection = (id: string) => {
+  const element = document.getElementById(id)
+  element?.scrollIntoView({
+    behavior: 'smooth',
+    block: 'start',
+  })
+}
 </script>
 
 <template>
@@ -10,8 +18,8 @@ import LanguageComboBox from './shared/LanguageComboBox.vue'
       <AppLogo />
     </div>
     <div class="flex items-center gap-2">
-      <a href="#resolution" class="header-button">Resolución</a>
-      <a href="#about" class="header-button">Acerca De</a>
+      <a class="header-button" @click.prevent="scrollToSection('resolution')">Resolución</a>
+      <a class="header-button" @click.prevent="scrollToSection('about')">Acerca De</a>
       <LanguageComboBox class="ml-2" />
     </div>
   </header>
@@ -22,6 +30,6 @@ import LanguageComboBox from './shared/LanguageComboBox.vue'
 @custom-variant dark (&:where(.dark, .dark *));
 
 .header-button {
-  @apply text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-colors duration-200 hover:cursor-pointer;
+  @apply text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-100 transition-colors duration-200 hover:cursor-pointer hidden sm:block;
 }
 </style>
