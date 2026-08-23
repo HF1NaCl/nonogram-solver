@@ -14,10 +14,20 @@ const group = ref(5)
 const { rowClues, columnClues, clearClues } = useNonogramClues(width, height)
 const { moveClueFocus } = useClueNavigation()
 
+const { rowErrors, columnErrors, validationMessage, hasCellCountMismatch, cellCountMessage } =
+  useClueValidation(rowClues, columnClues, width, height)
+
 const hasErrors = computed(() => Boolean(validationMessage.value))
 
-const { grid, status, canSolve, startSolving, applySolution, setStatus, resetGrid } =
-  useNonogramSolver(width, height, rowClues, columnClues, hasErrors)
+const { grid, status, errorMessage, canSolve, startSolving, resetGrid } = useNonogramSolver(
+  width,
+  height,
+  rowClues,
+  columnClues,
+  hasErrors,
+  hasCellCountMismatch,
+  cellCountMessage,
+)
 
 const cells = computed(() =>
   Array.from({ length: width.value * height.value }, (_, index) => ({
@@ -42,19 +52,9 @@ const rowClueWidth = computed(() => {
   return `${Math.max(40, Math.ceil(width.value / 2) * clueSize + 8)}px`
 })
 
-const { rowErrors, columnErrors, validationMessage } = useClueValidation(
-  rowClues,
-  columnClues,
-  width,
-  height,
-)
-
-const solve = () => {
-  const puzzle = startSolving()
-
-  if (!puzzle) return
-
-  console.log(puzzle)
+const clearPuzzle = () => {
+  clearClues()
+  resetGrid()
 }
 </script>
 
@@ -82,12 +82,12 @@ const solve = () => {
         <button
           class="solve-button inline-flex items-center justify-center gap-2"
           :disabled="!canSolve"
-          @click="solve"
+          @click="startSolving"
         >
           <Icon icon="mdi:wand" class="icon" />
           <span>{{ status === 'solving' ? 'Resolviendo...' : 'Resolver!' }}</span>
         </button>
-        <ClearButton @clear="clearClues" />
+        <ClearButton @clear="clearPuzzle" />
       </div>
     </div>
 
@@ -165,7 +165,7 @@ const solve = () => {
                 'border border-gray-300 dark:border-gray-700',
                 cellState === 'unknown' ? 'bg-white dark:bg-gray-800' : '',
                 cellState === 'filled' ? 'bg-gray-950 dark:bg-white' : '',
-                cellState === 'empty' ? 'bg-gray-100 dark:bg-gray-700' : '',
+                cellState === 'empty' ? 'bg-gray-100 dark:bg-gray-800' : '',
                 (columnIndex + 1) % group === 0 ? 'group-border-right' : '',
                 (rowIndex + 1) % group === 0 ? 'group-border-bottom' : '',
               ]"
@@ -183,6 +183,29 @@ const solve = () => {
     >
       {{ validationMessage }}
     </p>
+    <p
+      v-else-if="errorMessage"
+      class="text-center text-sm text-red-600 dark:text-red-400"
+      role="alert"
+    >
+      {{ errorMessage }}
+    </p>
+    <p v-else-if="cellCountMessage" class="text-center text-sm text-gray-600 dark:text-gray-300">
+      {{ cellCountMessage }}
+    </p>
+    <p v-else-if="status === 'unsolvable'" class="text-center text-sm" role="status">
+      El puzzle no tiene solución.
+    </p>
+    <p v-else-if="status === 'multiple-solutions'" class="text-center text-sm" role="status">
+      El puzzle tiene varias soluciones posibles.
+    </p>
+    <p
+      v-else-if="status === 'solved'"
+      class="text-center text-sm text-green-600 dark:text-green-400"
+      role="status"
+    >
+      Puzzle resuelto.
+    </p>
   </div>
 </template>
 
@@ -197,18 +220,6 @@ const solve = () => {
 .dark .clue-input-error {
   border-color: #f87171 !important;
   background: #450a0a;
-}
-.icon {
-  @apply w-6 h-6;
-}
-.input {
-  @apply border dark:border-gray-700 rounded px-2 py-1 w-20;
-}
-.input-group {
-  @apply flex flex-col space-y-1;
-}
-.input-label {
-  @apply text-sm font-medium uppercase text-gray-700 dark:text-gray-300;
 }
 .solve-button {
   @apply bg-gray-950 hover:bg-gray-700 text-white font-bold rounded-lg cursor-pointer size-14 w-36;
@@ -313,6 +324,16 @@ const solve = () => {
 
 .group-border-bottom {
   border-bottom: 2px solid #000 !important;
+}
+
+.input {
+  @apply border border-gray-300 dark:border-gray-600 rounded-lg px-2 py-1 w-20 text-center dark:text-white;
+}
+.input-group {
+  @apply flex flex-col gap-1;
+}
+.input-label {
+  @apply text-sm font-medium text-gray-700 dark:text-gray-300 uppercase;
 }
 
 :global(.dark) .group-border-right {
