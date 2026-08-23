@@ -2,7 +2,7 @@ import { computed, onUnmounted, ref, watch, type Ref } from 'vue'
 import type { CellState } from '@/interfaces/CellState.type'
 import type { NonogramPuzzle } from '@/interfaces/NonogramPuzzle.type'
 import type { SolverStatus } from '@/interfaces/SolverStatus.type'
-import type { SolverResponse } from '@/workers/solver.types'
+import type { SolverResponse } from '@/interfaces/Solver.type'
 
 const createGrid = (height: number, width: number): CellState[][] =>
   Array.from({ length: height }, () => Array.from({ length: width }, () => 'unknown' as const))

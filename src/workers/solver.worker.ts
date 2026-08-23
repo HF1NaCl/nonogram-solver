@@ -1,7 +1,7 @@
 /// <reference lib="webworker" />
 
 import { NonogramSolver } from '@/composables/solving_algs/nonogramSolver'
-import type { SolverRequest, SolverResponse } from './solver.types'
+import type { SolverRequest, SolverResponse } from '@/interfaces/Solver.type'
 
 self.onmessage = (event: MessageEvent<SolverRequest>) => {
   const request = event.data
