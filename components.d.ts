@@ -16,10 +16,13 @@ declare module 'vue' {
     AppHeader: typeof import('./src/components/AppHeader.vue')['default']
     AppLogo: typeof import('./src/components/shared/AppLogo.vue')['default']
     ClearButton: typeof import('./src/components/shared/ClearButton.vue')['default']
+    GridTable: typeof import('./src/components/NonogramCard/GridTable/GridTable.vue')['default']
+    HowToUseCards: typeof import('./src/components/HowToUseCards.vue')['default']
     LanguageComboBox: typeof import('./src/components/shared/LanguageComboBox.vue')['default']
-    NonogramCard: typeof import('./src/components/NonogramCard.vue')['default']
+    NonogramCard: typeof import('./src/components/NonogramCard/NonogramCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SettingsButton: typeof import('./src/components/shared/SettingsButton.vue')['default']
     TooltipTheme: typeof import('./src/components/shared/TooltipTheme.vue')['default']
   }
 }

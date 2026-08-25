@@ -8,6 +8,17 @@ const scrollToSection = (id: string) => {
     block: 'start',
   })
 }
+
+interface HeaderButton {
+  label: string
+  sectionId: string
+}
+
+const headerButtons: HeaderButton[] = [
+  { label: 'Resolución', sectionId: 'resolution' },
+  { label: 'Cómo utilizarlo', sectionId: 'howToUse' },
+  { label: 'Acerca De', sectionId: 'about' },
+]
 </script>
 
 <template>
@@ -18,8 +29,14 @@ const scrollToSection = (id: string) => {
       <AppLogo />
     </div>
     <div class="flex items-center gap-2">
-      <a class="header-button" @click.prevent="scrollToSection('resolution')">Resolución</a>
-      <a class="header-button" @click.prevent="scrollToSection('about')">Acerca De</a>
+      <a
+        class="header-button"
+        @click.prevent="scrollToSection(button.sectionId)"
+        v-for="button in headerButtons"
+        :key="button.sectionId"
+      >
+        {{ button.label }}
+      </a>
       <LanguageComboBox class="ml-2" />
     </div>
   </header>

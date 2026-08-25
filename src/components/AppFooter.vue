@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SettingsButton from './shared/SettingsButton.vue'
 import TooltipTheme from './shared/TooltipTheme.vue'
 </script>
 
@@ -11,6 +12,7 @@ import TooltipTheme from './shared/TooltipTheme.vue'
     </div>
 
     <div class="flex items-center gap-2">
+      <SettingsButton />
       <TooltipTheme />
       <span class="text-sm text-gray-500 dark:text-gray-400">
         © {{ new Date().getFullYear() }} HF1NaCl

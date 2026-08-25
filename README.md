@@ -1,6 +1,6 @@
 # Nonogram Solver
 
-Un resolvedor de nonogramas simple y fácil de usar. Ingresa los números de las pistas y resuelve el puzzle de forma rápida. Altamente basado en nonogramsolver.com como un ejercicio de cómo hacer un Solver.
+Un resolvedor de nonogramas simple y fácil de usar. Ingresa los números de las pistas y resuelve el puzzle de forma rápida. Altamente basado en [nonogramsolver.com](https://nonogramsolver.com/) como un ejercicio de cómo hacer un Solver.
 
 ## Características del proyecto
 
@@ -93,10 +93,10 @@ pnpm test:unit
 
 ## Estado del Proyecto
 
-Todavía está en desarrollo, por lo que si quieres usar algún Nonogram Solver estable, usa el mencionado en los créditos.
+Ya utilizable para Resolución. Ajustes de Interfaz necesarias.
 
 ## Créditos
 
-- Proyecto original y base: nonogramsolver.com por Puzzle Rocket
+- Proyecto original y base: [nonogramsolver.com](https://nonogramsolver.com/) por Puzzle Rocket
 - Lógica de resolución visual: https://lihautan.com/nonogram/ por Tan Li Hau
 - Lógica de Resolución clásica: https://fedimser.github.io/nonogram.html por Dima Fedoriaka

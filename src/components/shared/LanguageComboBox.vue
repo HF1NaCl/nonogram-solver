@@ -15,9 +15,9 @@ import {
 } from 'reka-ui'
 
 const languageOptions = [
-  { value: 'es', label: 'Español', flag: '🇪🇸' },
-  { value: 'en', label: 'English', flag: '🇺🇸' },
-  { value: 'fr', label: 'Français', flag: '🇫🇷' },
+  { value: 'es', label: 'Español', icon: 'flag:es-4x3' },
+  { value: 'en', label: 'English', icon: 'flag:gb-4x3' },
+  { value: 'fr', label: 'Français', icon: 'flag:fr-4x3' },
 ]
 
 const selectedLanguage = ref('es')
@@ -38,7 +38,7 @@ const selectedOption = computed(
       <SelectValue :aria-label="`Idioma: ${selectedOption.label}`">
         <span class="flex items-center gap-1.5">
           <span aria-hidden="true" class="text-sm leading-none">
-            {{ selectedOption.flag }}
+            <Icon :icon="selectedOption.icon" class="h-4 w-5" />
           </span>
           <span>{{ selectedOption.label }}</span>
         </span>
@@ -64,7 +64,7 @@ const selectedOption = computed(
           >
             <SelectItemText>
               <span class="flex items-center gap-2">
-                <span aria-hidden="true" class="text-sm leading-none">{{ option.flag }}</span>
+                <Icon :icon="option.icon" class="h-4 w-5" />
                 <span>{{ option.label }}</span>
               </span>
             </SelectItemText>

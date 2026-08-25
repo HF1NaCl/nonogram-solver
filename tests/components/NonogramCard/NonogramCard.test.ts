@@ -1,7 +1,7 @@
 import { mount } from '@vue/test-utils'
 import { describe, expect, it } from 'vitest'
 import { nextTick } from 'vue'
-import NonogramCard from '@/components/NonogramCard.vue'
+import NonogramCard from '@/components/NonogramCard/NonogramCard.vue'
 
 describe('NonogramCard', () => {
   it('shows the filled-cell calculation without showing an error', async () => {
@@ -26,7 +26,7 @@ describe('NonogramCard', () => {
     await columnInput.setValue('1')
     await nextTick()
 
-    await wrapper.get('button.solve-button').trigger('click')
+    await wrapper.get('button.nonogram-solve-button').trigger('click')
 
     expect(wrapper.text()).toContain('Error: Números no coincidentes. 2 vs 1')
   })

@@ -1,0 +1,62 @@
+@reference "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+.nonogram-card {
+    @apply flex h-full w-full min-w-0 flex-col space-y-4 rounded-2xl border bg-white p-6 mb-4 dark:border-gray-700 dark:bg-gray-800;
+}
+
+.nonogram-controls {
+    @apply mb-2 flex w-full flex-wrap items-center justify-center gap-4;
+}
+
+.nonogram-input-group {
+    @apply flex flex-col gap-1;
+}
+
+.nonogram-input-label {
+    @apply text-sm font-medium uppercase text-gray-700 dark:text-gray-300;
+}
+
+.nonogram-input {
+    @apply w-20 rounded-lg border border-gray-300 px-2 py-1 text-center dark:border-gray-600 dark:text-white;
+}
+
+.nonogram-solve-button {
+    @apply inline-flex h-14 w-36 cursor-pointer items-center justify-center gap-2 rounded-lg bg-gray-950 font-bold text-white hover:bg-gray-700 disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.nonogram-wrapper {
+    @apply block w-full min-w-0 overflow-x-auto overflow-y-visible mt-5;
+}
+
+.nonogram-layout {
+    @apply mx-auto grid w-max;
+}
+
+.nonogram-corner {
+    @apply border-r-2 border-b-2 border-gray-900 bg-gray-200 dark:border-gray-100 dark:bg-gray-700;
+}
+
+.nonogram-column-clues {
+    @apply grid items-end bg-gray-100 dark:bg-gray-700;
+}
+
+.nonogram-column-clue {
+    @apply flex flex-col justify-end gap-0 pb-1.5;
+}
+
+.nonogram-row-clues {
+    @apply grid w-full min-w-0 items-center overflow-visible bg-gray-100 dark:bg-gray-700;
+}
+
+.nonogram-row-clue {
+    @apply flex w-full flex-nowrap items-center justify-end gap-0 pr-1;
+}
+
+.nonogram-clue-input {
+    @apply box-border h-(--cell-size) w-(--cell-size) rounded-none border border-gray-300 bg-gray-50 p-0 text-center text-xs font-semibold text-gray-900 outline-none hover:border-gray-400 hover:bg-white focus:relative focus:z-10 focus:border-2 focus:border-blue-600 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-50 dark:hover:bg-gray-600 dark:focus:border-blue-400;
+}
+
+.nonogram-clue-input-error {
+    @apply border-red-600 bg-red-50 dark:border-red-400 dark:bg-red-950;
+}
