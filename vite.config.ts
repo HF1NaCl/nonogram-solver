@@ -9,6 +9,7 @@ import RekaResolver from 'reka-ui/resolver'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/nonogram-solver/',
   plugins: [
     vue(),
     vueDevTools(),
