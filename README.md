@@ -2,6 +2,8 @@
 
 Aplicación web para introducir las pistas de un nonograma y calcular su solución. El proyecto es una reimplementación con Vue y TypeScript, inspirada en [Nonogram Solver](https://nonogramsolver.com/).
 
+Para una visualización en Vivo, visita este [enlace](https://hf1nacl.github.io/nonogram-solver/).
+
 ## Funciones
 
 - Configurar el ancho y alto de la cuadrícula entre 3 y 30; inicia en 10 × 10.
